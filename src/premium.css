@@ -129,6 +129,31 @@ html {
   max-width: 235px;
   color: #b1b8a7;
 }
+.work .projects {
+  margin-top: 0;
+}
+.work .project {
+  grid-template-columns: minmax(0, 0.36fr) minmax(0, 0.64fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  min-height: 0;
+  padding: 0;
+  border-top: 0;
+}
+.work .project-info {
+  display: flex;
+  min-width: 0;
+  padding: 0;
+  justify-content: center;
+  gap: 24px;
+}
+.work .project-focus {
+  margin-top: 0;
+}
+.work .project-preview {
+  min-width: 0;
+  max-width: 100%;
+}
 .project-info h3 {
   font-size: clamp(30px, 3.1vw, 46px);
   line-height: 1.15;
@@ -308,6 +333,14 @@ html {
     height: clamp(270px, 43vw, 350px);
     flex-shrink: 0;
   }
+  .hero-cards-single {
+    height: clamp(210px, 36vw, 280px);
+  }
+  .hero-cards-single .hero-card-slot-1 {
+    left: 28%;
+    right: auto;
+    top: 20px;
+  }
   .hero-card-slot {
     width: 44%;
     max-width: 345px;
@@ -379,6 +412,13 @@ html {
   }
 }
 
+@media (max-width: 760px) {
+  .work .project {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
 @media (max-width: 520px) {
   :root {
     --page-pad: 22px;
@@ -401,6 +441,12 @@ html {
   }
   .hero-cards {
     height: clamp(258px, 69vw, 320px);
+  }
+  .hero-cards-single {
+    height: 210px;
+  }
+  .hero-cards-single .hero-card-slot-1 {
+    left: 19%;
   }
   .hero-card-slot {
     width: 62%;

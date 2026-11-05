@@ -76,7 +76,10 @@ function Hero({ onProject }) {
             </span>
           </span>
         </h1>
-        <div className="hero-cards" aria-label="Explore selected projects">
+        <div
+          className="hero-cards hero-cards-single"
+          aria-label="Explore ScamShield AI"
+        >
           {projects.map((project, i) => (
             <div
               className={`hero-card-slot hero-card-slot-${i + 1}`}
@@ -104,7 +107,6 @@ function Hero({ onProject }) {
                     </div>
                     <span className="floating-card-foot mono">
                       <span>CONCEPT INTERFACE</span>
-                      <span>0{i + 1} ↗</span>
                     </span>
                   </button>
                 </div>
@@ -203,24 +205,6 @@ function Work({ onProject }) {
       id="work"
       aria-labelledby="work-heading"
     >
-      <SectionLabel number="01">SELECTED WORK</SectionLabel>
-      <div className="section-heading-row reveal">
-        <h2 className="section-title" id="work-heading">
-          <span className="type-line">
-            <span>Ideas, made</span>
-          </span>
-          <span className="type-line">
-            <span>
-              <span className="muted-word">tangible.</span>
-              <span className="lime-period">●</span>
-            </span>
-          </span>
-        </h2>
-        <p className="section-aside">
-          A selection of projects at the intersection of intelligence, purpose,
-          and the everyday.
-        </p>
-      </div>
       <div className="projects">
         {projects.map((project) => (
           <article
@@ -228,12 +212,9 @@ function Work({ onProject }) {
             key={project.id}
           >
             <div className="project-info">
-              <span className="project-number mono">
-                ({project.number} / 03)
-              </span>
               <div>
                 <p className="project-category mono">{project.category}</p>
-                <h3>{project.title}</h3>
+                <h3 id="work-heading">{project.title}</h3>
                 <p className="project-tagline">{project.description}</p>
                 <p className="project-description">{project.detail}</p>
                 <button
@@ -259,7 +240,6 @@ function Work({ onProject }) {
             >
               <span className="preview-topline mono">
                 <span>{project.title.toUpperCase()} / INTERFACE STUDY</span>
-                <span>{project.number}</span>
               </span>
               <div className="project-window">
                 <ProjectVisual type={project.id} />
@@ -603,7 +583,7 @@ function ProjectDialog({ project, onClose, returnFocusRef }) {
         tabIndex={-1}
       >
         <div className="dialog-top">
-          <span className="mono">PROJECT NOTES / {project.number}</span>
+          <span className="mono">PROJECT NOTES</span>
           <button onClick={onClose} aria-label="Close project details">
             <X size={22} />
           </button>

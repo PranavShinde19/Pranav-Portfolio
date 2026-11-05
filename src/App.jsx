@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   ArrowUpRight,
@@ -6,7 +6,6 @@ import {
   Asterisk,
   Plus,
   Minus,
-  Menu,
   X,
   Github,
   Linkedin,
@@ -19,12 +18,13 @@ import {
   Pause,
   Play,
 } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectVisual from "./components/ProjectVisual";
 import { profile, projects, skills } from "./content";
 
-gsap.registerPlugin(ScrollTrigger);
+import Navigation from "./components/Navigation";
+import ScrollProgress from "./components/ScrollProgress";
+import usePortfolioMotion from "./hooks/usePortfolioMotion";
+import "./premium.css";
 
 function SectionLabel({ number, children, light = false }) {
   return (
@@ -55,66 +55,6 @@ function Brand({ footer = false }) {
   );
 }
 
-function Navigation() {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (!open) return;
-    const close = (e) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
-  }, [open]);
-  return (
-    <header className="site-header">
-      <Brand />
-      <nav className="desktop-nav" aria-label="Main navigation">
-        <a href="#work">
-          <span>01</span> Work
-        </a>
-        <a href="#about">
-          <span>02</span> About
-        </a>
-        <a href="#skills">
-          <span>03</span> Toolkit
-        </a>
-      </nav>
-      <a className="header-contact" href="#contact">
-        Let’s talk <ArrowUpRight size={17} />
-      </a>
-      <button
-        className="menu-toggle"
-        aria-expanded={open}
-        aria-controls="mobile-nav"
-        aria-label={open ? "Close navigation" : "Open navigation"}
-        onClick={() => setOpen(!open)}
-      >
-        {open ? <X /> : <Menu />}
-      </button>
-      {open && (
-        <nav
-          className="mobile-nav"
-          id="mobile-nav"
-          aria-label="Mobile navigation"
-        >
-          {[
-            ["Work", "work"],
-            ["About", "about"],
-            ["Toolkit", "skills"],
-            ["Contact", "contact"],
-          ].map(([label, id], i) => (
-            <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>
-              <span className="mono">0{i + 1}</span>
-              {label}
-              <ArrowUpRight />
-            </a>
-          ))}
-        </nav>
-      )}
-    </header>
-  );
-}
-
 function Hero({ onProject }) {
   return (
     <section className="hero" id="home" aria-labelledby="hero-title">
@@ -136,32 +76,42 @@ function Hero({ onProject }) {
             </span>
           </span>
         </h1>
-        <div className="hero-cards" aria-label="Explore selected projects">
+        <div
+          className="hero-cards hero-cards-single"
+          aria-label="Explore ScamShield AI"
+        >
           {projects.map((project, i) => (
-            <button
-              type="button"
+            <div
+              className={`hero-card-slot hero-card-slot-${i + 1}`}
               key={project.id}
-              className={`floating-card floating-card-${i + 1}`}
-              onClick={() => onProject(project)}
-              aria-label={`Explore ${project.title}`}
             >
-              <div className="floating-card-bar">
-                <span className="window-dots">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="mono">{project.title}</span>
-                <ArrowUpRight size={12} />
+              <div className="hero-card-entry">
+                <div className="hero-card-motion">
+                  <button
+                    type="button"
+                    className={`floating-card floating-card-${i + 1}`}
+                    onClick={(event) => onProject(project, event.currentTarget)}
+                    aria-label={`Explore ${project.title}`}
+                  >
+                    <div className="floating-card-bar">
+                      <span className="window-dots">
+                        <i />
+                        <i />
+                        <i />
+                      </span>
+                      <span className="mono">{project.title}</span>
+                      <ArrowUpRight size={12} />
+                    </div>
+                    <div className="floating-card-visual">
+                      <ProjectVisual type={project.id} compact />
+                    </div>
+                    <span className="floating-card-foot mono">
+                      <span>CONCEPT INTERFACE</span>
+                    </span>
+                  </button>
+                </div>
               </div>
-              <div className="floating-card-visual">
-                <ProjectVisual type={project.id} compact />
-              </div>
-              <span className="floating-card-foot mono">
-                <span>CONCEPT INTERFACE</span>
-                <span>0{i + 1} ↗</span>
-              </span>
-            </button>
+            </div>
           ))}
           <span className="card-annotation mono">
             A FEW THINGS
@@ -255,37 +205,21 @@ function Work({ onProject }) {
       id="work"
       aria-labelledby="work-heading"
     >
-      <SectionLabel number="01">SELECTED WORK</SectionLabel>
-      <div className="section-heading-row reveal">
-        <h2 className="section-title" id="work-heading">
-          Ideas, made
-          <br />
-          <span className="muted-word">tangible.</span>
-          <span className="lime-period">●</span>
-        </h2>
-        <p className="section-aside">
-          A selection of projects at the intersection of intelligence, purpose,
-          and the everyday.
-        </p>
-      </div>
       <div className="projects">
         {projects.map((project) => (
           <article
             className={`project project-${project.accent}`}
             key={project.id}
           >
-            <div className="project-info reveal">
-              <span className="project-number mono">
-                ({project.number} / 03)
-              </span>
+            <div className="project-info">
               <div>
                 <p className="project-category mono">{project.category}</p>
-                <h3>{project.title}</h3>
+                <h3 id="work-heading">{project.title}</h3>
                 <p className="project-tagline">{project.description}</p>
                 <p className="project-description">{project.detail}</p>
                 <button
                   className="project-button"
-                  onClick={() => onProject(project)}
+                  onClick={(event) => onProject(project, event.currentTarget)}
                 >
                   Explore the project{" "}
                   <span>
@@ -302,11 +236,10 @@ function Work({ onProject }) {
             <button
               className="project-preview"
               aria-label={`View ${project.title} concept and project details`}
-              onClick={() => onProject(project)}
+              onClick={(event) => onProject(project, event.currentTarget)}
             >
               <span className="preview-topline mono">
                 <span>{project.title.toUpperCase()} / INTERFACE STUDY</span>
-                <span>{project.number}</span>
               </span>
               <div className="project-window">
                 <ProjectVisual type={project.id} />
@@ -336,13 +269,17 @@ function About() {
       <div className="about-layout">
         <div className="about-copy">
           <h2 className="about-statement reveal" id="about-heading">
-            A curious mind.
-            <br />A builder’s instinct.
-            <br />
-            <span>
-              Always connecting
-              <br />
-              the dots.
+            <span className="type-line">
+              <span>A curious mind.</span>
+            </span>
+            <span className="type-line">
+              <span>A builder’s instinct.</span>
+            </span>
+            <span className="type-line accent-line">
+              <span>Always connecting</span>
+            </span>
+            <span className="type-line accent-line">
+              <span>the dots.</span>
             </span>
           </h2>
           <div className="about-description reveal">
@@ -419,9 +356,12 @@ function Toolkit() {
       <SectionLabel number="03">TOOLS OF THE TRADE</SectionLabel>
       <div className="section-heading-row reveal">
         <h2 className="section-title" id="skills-heading">
-          The right tools.
-          <br />
-          <span className="muted-word">Endless possibilities.</span>
+          <span className="type-line">
+            <span>The right tools.</span>
+          </span>
+          <span className="type-line muted-word">
+            <span>Endless possibilities.</span>
+          </span>
         </h2>
         <Asterisk
           className="toolkit-star"
@@ -503,11 +443,15 @@ function Contact() {
       </SectionLabel>
       <div className="contact-heading-wrap reveal">
         <h2 id="contact-heading">
-          LET’S BUILD
-          <br />
-          SOMETHING
-          <br />
-          <span>GREAT.</span>
+          <span className="type-line">
+            <span>LET’S BUILD</span>
+          </span>
+          <span className="type-line">
+            <span>SOMETHING</span>
+          </span>
+          <span className="type-line contact-final">
+            <span>GREAT.</span>
+          </span>
         </h2>
         <Asterisk className="contact-star" strokeWidth={1} aria-hidden="true" />
       </div>
@@ -587,13 +531,13 @@ function Contact() {
   );
 }
 
-function ProjectDialog({ project, onClose }) {
+function ProjectDialog({ project, onClose, returnFocusRef }) {
   const dialogRef = useRef(null);
   useEffect(() => {
-    const previous = document.activeElement;
+    const previous = returnFocusRef.current;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    dialogRef.current?.focus();
+    dialogRef.current?.focus({ preventScroll: true });
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
       if (e.key === "Tab") {
@@ -620,9 +564,9 @@ function ProjectDialog({ project, onClose }) {
     return () => {
       document.body.style.overflow = originalOverflow;
       document.removeEventListener("keydown", onKey);
-      previous?.focus();
+      if (previous?.isConnected) previous.focus({ preventScroll: true });
     };
-  }, [onClose]);
+  }, [onClose, returnFocusRef]);
   return createPortal(
     <div
       className="dialog-backdrop"
@@ -639,7 +583,7 @@ function ProjectDialog({ project, onClose }) {
         tabIndex={-1}
       >
         <div className="dialog-top">
-          <span className="mono">PROJECT NOTES / {project.number}</span>
+          <span className="mono">PROJECT NOTES</span>
           <button onClick={onClose} aria-label="Close project details">
             <X size={22} />
           </button>
@@ -689,147 +633,37 @@ function ProjectDialog({ project, onClose }) {
   );
 }
 
-function useAnimations(root) {
-  useLayoutEffect(() => {
-    const media = gsap.matchMedia();
-    media.add("(prefers-reduced-motion: no-preference)", () => {
-      const ctx = gsap.context(() => {
-        const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-        intro
-          .from(".hero-topline", { opacity: 0, y: 12, duration: 0.7 })
-          .from(
-            ".title-line > span",
-            { yPercent: 110, rotate: 3, duration: 1.25, stagger: 0.12 },
-            0.1,
-          )
-          .from(
-            ".floating-card",
-            {
-              opacity: 0,
-              y: 90,
-              scale: 0.85,
-              duration: 1.2,
-              stagger: 0.13,
-              clearProps: "opacity",
-            },
-            0.45,
-          )
-          .from(
-            ".hero-intro, .scroll-cue, .hero-side-note, .card-annotation",
-            { opacity: 0, y: 20, duration: 0.8, stagger: 0.07 },
-            0.7,
-          );
-        gsap.to(".hero-asterisk", {
-          rotation: 100,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-        gsap.utils
-          .toArray(".reveal")
-          .forEach((el) =>
-            gsap.from(el, {
-              opacity: 0,
-              y: 38,
-              duration: 0.9,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top 91%", once: true },
-            }),
-          );
-        gsap.utils.toArray(".project-window").forEach((el, i) => {
-          gsap.fromTo(
-            el,
-            { y: 26, rotate: i % 2 ? 3 : -3, scale: 0.94 },
-            {
-              y: -18,
-              rotate: i % 2 ? -1 : 1,
-              scale: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: el.parentElement,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1.2,
-              },
-            },
-          );
-        });
-      }, root);
-      return () => ctx.revert();
-    });
-    media.add(
-      "(min-width: 900px) and (prefers-reduced-motion: no-preference)",
-      () => {
-        const ctx = gsap.context(() => {
-          gsap.to(".hero-cards", {
-            y: -105,
-            rotate: -5,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".hero",
-              start: "top top",
-              end: "bottom top",
-              scrub: 1.5,
-            },
-          });
-          gsap.utils.toArray(".floating-card").forEach((card, i) => {
-            gsap.to(card, {
-              "--card-x": `${[35, -50, 15][i]}px`,
-              "--card-y": `${[-60, -15, 45][i]}px`,
-              "--card-angle": `${[-8, 6, 10][i]}deg`,
-              ease: "none",
-              scrollTrigger: {
-                trigger: ".hero",
-                start: "top top",
-                end: "bottom top",
-                scrub: 1.5,
-              },
-            });
-          });
-          gsap.to(".orbit-ring-2", {
-            rotate: 100,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".about",
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          });
-        }, root);
-        return () => ctx.revert();
-      },
-    );
-    const refresh = () => ScrollTrigger.refresh();
-    document.fonts.ready.then(refresh);
-    return () => media.revert();
-  }, [root]);
-}
-
 export default function App() {
   const root = useRef(null);
   const [project, setProject] = useState(null);
-  useAnimations(root);
+  const returnFocusRef = useRef(null);
+  const openProject = useCallback((selected, trigger) => {
+    returnFocusRef.current = trigger;
+    setProject(selected);
+  }, []);
+  const closeProject = useCallback(() => setProject(null), []);
+  usePortfolioMotion(root);
   return (
-    <div ref={root} className="app">
+    <div ref={root} className="app" inert={project ? true : undefined}>
+      <ScrollProgress />
       <a className="skip-link" href="#main">
         Skip to content
       </a>
       <Navigation />
       <main id="main">
-        <Hero onProject={setProject} />
+        <Hero onProject={openProject} />
         <Marquee />
-        <Work onProject={setProject} />
+        <Work onProject={openProject} />
         <About />
         <Toolkit />
         <Contact />
       </main>
       {project && (
-        <ProjectDialog project={project} onClose={() => setProject(null)} />
+        <ProjectDialog
+          project={project}
+          onClose={closeProject}
+          returnFocusRef={returnFocusRef}
+        />
       )}
     </div>
   );

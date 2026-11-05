@@ -26,6 +26,10 @@ npm run preview
 - `src/content.js`: email, GitHub, LinkedIn, résumé URL, project descriptions, focus areas, and suggested technologies. Blank contact fields show labeled placeholders. Blank project URLs do not render links.
 - `src/App.jsx`: biography, education, and the achievements placeholder. Add awards/certifications only after verification.
 - `src/styles.css`: design tokens, responsive layouts, and interaction styling.
+- `src/premium.css`: responsive type/spacing refinements, separated hero card layers, and accessible hover/focus treatments.
+- `src/hooks/usePortfolioMotion.js`: GSAP entrance, section/text reveals, project parallax, and desktop-only ambient/pointer motion. Match-media contexts revert animations, observers, and event listeners when motion preferences change or the component unmounts.
+- `src/components/Navigation.jsx` and `.css`: sticky navigation, active-section state, and accessible mobile navigation.
+- `src/components/ScrollProgress.jsx`: a minimal native-scroll progress indicator that also updates after content resizes.
 - `src/components/ProjectVisual.jsx` and `.css`: original decorative interface mockups. These are explicitly labeled concept interfaces, not screenshots of deployed products. Suggested technologies are not claims about existing project implementations.
 - `index.html`: document title and social/search metadata.
 
@@ -35,12 +39,17 @@ The email is configured as `shindepranav5518@gmail.com`. LinkedIn, résumé, ver
 
 ## Interaction and accessibility
 
-- Native anchor scrolling with GSAP entrances and scroll-linked card movement; no scroll hijacking.
-- Responsive mobile menu, skill filtering and expandable skill notes.
+- Native anchor scrolling with a progress indicator, staggered GSAP entrances, text reveals, and subtle project parallax; no scroll hijacking.
+- Desktop cards gently float, respond subtly to pointer movement, and straighten on hover or keyboard focus. Motion pauses when the hero is offscreen or the page is hidden. Pointer effects are limited to fine-pointer desktop devices.
+- Smaller screens reserve a separate stage below the name for the project cards, keeping the heading and navigation clear.
+- Sticky navigation highlights the current section. The mobile menu supports Escape with focus restoration, outside-click dismissal, and resize cleanup. Main action targets are at least 44px tall.
+- Skill filtering and expandable skill notes are preserved.
 - Project dialogs support Escape, focus trapping, focus restoration, and background scroll locking.
 - Functional email and copy-email actions, and the supplied repository owner's GitHub profile.
 - Reduced-motion preferences disable the moving ticker and GSAP sequences. A ticker pause control is also available.
 - Keyboard focus indicators, a skip link, semantic sections, and decorative previews hidden from screen readers.
+
+For a browser regression check, test 360px, 390px, 768px, and 1440px widths. Exercise anchor links, hero/project dialogs, focus restoration, skill filters, and the contact actions. Check that the page has no horizontal overflow. With reduced motion enabled, content must remain visible and ambient/pointer/scroll animations must stop. Also switch the preference while the page is open to confirm that it updates without reloading.
 
 ## Save to GitHub
 

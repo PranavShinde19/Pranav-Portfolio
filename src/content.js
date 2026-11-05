@@ -10,7 +10,6 @@ export const profile = {
 export const projects = [
   {
     id: "scamshield",
-    number: "01",
     title: "ScamShield AI",
     category: "ARTIFICIAL INTELLIGENCE / SECURITY",
     description: "A little intelligence. A safer internet.",
@@ -24,40 +23,6 @@ export const projects = [
     suggestedStack: ["Python", "FastAPI", "React"],
     url: "",
     accent: "mint",
-  },
-  {
-    id: "civicvision",
-    number: "02",
-    title: "CivicVision",
-    category: "CIVIC TECHNOLOGY / WEB",
-    description: "Better neighborhoods start with a voice.",
-    detail:
-      "A smart civic issue reporting and tracking platform that brings local problems into focus, connecting clear reports with a more visible path toward resolution.",
-    focus: [
-      "Location-based reporting",
-      "Issue tracking",
-      "Community accessibility",
-    ],
-    suggestedStack: ["React", "Node.js", "Supabase"],
-    url: "",
-    accent: "orange",
-  },
-  {
-    id: "stepwise",
-    number: "03",
-    title: "StepWise",
-    category: "ARTIFICIAL INTELLIGENCE / ACCESSIBILITY",
-    description: "Complex ideas. Clear next steps.",
-    detail:
-      "An AI-powered accessible instruction and flowchart generator. A way to turn complicated processes into clear, approachable steps that more people can follow.",
-    focus: [
-      "Accessible instructions",
-      "AI-assisted generation",
-      "Visual thinking",
-    ],
-    suggestedStack: ["Python", "FastAPI", "React"],
-    url: "",
-    accent: "blue",
   },
 ];
 

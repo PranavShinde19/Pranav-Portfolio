@@ -598,11 +598,6 @@ section[id] {
   justify-content: space-between;
   padding: 3px 12% 6px 0;
 }
-.project-number {
-  color: #8c9382;
-  font-size: 9px;
-  margin-bottom: 25px;
-}
 .project-category {
   font-size: 8px;
   letter-spacing: 0.055em;
@@ -684,14 +679,6 @@ section[id] {
 .project-mint.dialog-visual {
   background: #cbdcc0;
 }
-.project-orange .project-preview,
-.project-orange.dialog-visual {
-  background: #ddaa7f;
-}
-.project-blue .project-preview,
-.project-blue.dialog-visual {
-  background: #aabccb;
-}
 .preview-topline,
 .preview-bottomline {
   display: flex;
@@ -703,14 +690,6 @@ section[id] {
 }
 .preview-topline {
   margin-bottom: 31px;
-}
-.project-orange .preview-topline,
-.project-orange .preview-bottomline {
-  color: #563c2599;
-}
-.project-blue .preview-topline,
-.project-blue .preview-bottomline {
-  color: #2c435999;
 }
 .project-window {
   border-radius: 7px;
@@ -1634,10 +1613,6 @@ section[id] {
     grid-template-columns: 35px 1fr;
     gap: 0 12px;
   }
-  .project-number {
-    margin-bottom: 0;
-    padding-top: 3px;
-  }
   .project-category {
     font-size: 7px;
     margin-bottom: 10px;
@@ -1980,9 +1955,6 @@ section[id] {
   .project-info h3 {
     font-size: 31px;
   }
-  .project-number {
-    font-size: 7px;
-  }
   .project-tagline {
     font-size: 11px;
   }
@@ -2252,9 +2224,6 @@ section[id] {
 }
 .marquee-control:hover {
   background: #27331c;
-}
-.project-number {
-  white-space: nowrap;
 }
 .dialog-visual > .pv-window {
   border-radius: 5px;

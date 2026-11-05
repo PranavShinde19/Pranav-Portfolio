@@ -106,7 +106,7 @@ export default function Navigation() {
         onClick={() => setOpen(false)}
       >
         <span className="brand-symbol">
-          p<span>/</span>s<span className="brand-dot">.</span>
+          P<span>/</span>S
         </span>
         <span className="brand-name">
           PRANAV
